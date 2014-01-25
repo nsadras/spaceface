@@ -12,7 +12,8 @@ class FacialRecognition:
     self.prev_fire = False
     self.displacement_x = 0.0
     self.displacement_y = 0.0
-    self.center_x, self.range_x, self.center_y, self.range_y = self.calibrate()
+    self.dist = 0.0
+    self.center_x, self.range_x, self.center_y, self.range_y, self.init_dist = self.calibrate()
 
   def calibrate(self):
     # print("Calibration...")
@@ -41,7 +42,7 @@ class FacialRecognition:
     # cv2.destroyAllWindows()
     # raw_input((center_x, center_y))
 
-    return 7.0, 14.0, -22.0, 20.0
+    return 7.0, 14.0, -22.0, 20.0, 96
 
   # def calibrate(self):
   #   print("Calibration...")
@@ -89,6 +90,7 @@ class FacialRecognition:
       faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
 
       for x, y, w, h in faces:
+        self.dist = self.init_dist - w
         frame = cv2.rectangle(frame, (x, y), (x + w, y + h), color=(255, 0, 0), thickness=2)
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = frame[y:y+h, x:x+w]
@@ -124,7 +126,7 @@ class FacialRecognition:
     cv2.destroyAllWindows()
 
   def print_features(self):
-    print "%r   %f   %f"%(self.fire, self.displacement_x, self.displacement_y)
+    print "%r   %f   %f   %f"%(self.fire, self.displacement_x, self.displacement_y, self.dist)
 
 if __name__ == "__main__":
   FacialRecognition().recognize_features()
