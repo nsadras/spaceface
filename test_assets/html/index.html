@@ -1,7 +1,20 @@
 <html>
-<head>
-</head>
-<body>
-asdf
-</body>
+    <head>
+    <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <p id="output"></p>
+        <script>
+            function show(s){
+                document.getElementById("output").innerHTML=s;
+            }
+            var socket = io.connect("http://localhost:1759");
+            var sessionKey=-1;
+            socket.on('welcome',function(data){
+                show(data.sessionKey);
+                sessionKey=data.sessionKey
+                socket.emit('command',{sessionKey:sessionKey,controls:{shoot:false,displacement_x:1.0,displacement_y:1.0}})
+            });
+        </script>
+    </body>
 </html>

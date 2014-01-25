@@ -28,13 +28,18 @@ app.get('/*',function(req,res){
 
 //Set up individual connections
 var state = new GameState();
+
 io.sockets.on('connection',function(socket){
     var sessionKey = makeSessionKey();
+    state.addPlayer(sessionKey);
     socket.emit('welcome',{sessionKey:sessionKey});
     socket.on('command',function(data){
         state.setControls(data.sessionKey,data.controls);
     });
-    state.addPlayer(sessionKey);
+    socket.on('exit',function(data){
+        state.removePlayer(data.sessionKey);
+        io.sockets.emit('playerExit',{sessionKey:data.sessionKey});
+    });
 });
 
 //Start game heartbeat
