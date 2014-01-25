@@ -1,0 +1,32 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+var GameServerSocket = io.connect('http://localhost:7777');
+var VisionServerSocket = io.connect('http://localhost:1759');
+
+GameServerSocket.on("welcome", function (data) {
+	sessionKey = data["sessionKey"];
+});
+
+GameServerSocket.on("heartbeat", function (data) {
+	GameServerSocket.emit("IamHere", {data:visionData});
+	graphicsUpdate(data)
+});
+
+setInterval(function(){
+	VisionServerSocket.emit("getWebcamData", {}); 
+},50);
+
+var visionData;
+
+VisionServerSocket.on("webCamData", function (data){
+	visionData = data["webCamData"];
+	console.log("In graphics Update visionData is " + visionData);
+});
+
+
+
+//data is in the form of a json - one boolean and two floats
+function graphicsUpdate(data) {
+	console.log("In graphics Update visionData is " + data.visionData);
+}
+</script>
