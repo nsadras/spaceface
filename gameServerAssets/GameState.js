@@ -8,7 +8,7 @@ function GameState(){
     this.players={} //Array of players
     //pointless comment
     this.addPlayer = function(sessionKey){
-        players[sessionKey] = new Player(); //TODO: Update to match player costructor
+        players[sessionKey] = new Player(); //TODO: Update to match player constructor
     }
     this.update=function(){
         for (sessionKey in this.players){

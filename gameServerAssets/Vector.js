@@ -22,13 +22,18 @@ sub=function(u,v){
 dot=function(u,v){
     return u.x*v.x+u.y*v.y+u.z*v.z;
 }
+cross=function(u,v){
+    return new Vector.Vector(u.y * v.z - u.z * v.y,
+                             u.z * v.x - u.x * v.z,
+                             u.x * v.y - u.y * v.x);
+}
 scale=function(v,c){
-    return new Vector.Vector(v.x*c,v.y*c);
+    return new Vector.Vector(v.x*c,v.y*c,v.z*c);
 }
 unitVector=function(v){
     return Vector.scale(v,1.0/v.norm());
 }
-proj = function(u,v){
+proj=function(u,v){
     var vUnit = Vector.unitVector(v);
     Vector.scale(vUnit,Vector.dot(vUnit,u))
 }

@@ -26,7 +26,7 @@ function Player() {
             var normal = new Vector.Vector(x, y, z);
         }
         var basis2 = Vector.cross(normal, this.velocity);
-        basis2 = Vector.normalize(basis2);
+        basis2 = Vector.unitVector(basis2);
         this.acceleration = Vector.add(Vector.scale(normal, this.displacement_x), Vector.scale(basis2, this.displacement_y));
         this.velocity = Vector.add(this.velocity, this.acceleration);
         this.position = Vector.add(this.position, this.velocity);
