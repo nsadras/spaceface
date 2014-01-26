@@ -1,9 +1,10 @@
 import time
 import sys
+import json
 import numpy as np
 import cv2
 
-NUM_PRINTS = 150 # hack, don't ask
+NUM_PRINTS = 200 # hack, don't ask
 
 class FacialRecognitionException(Exception):
   pass
@@ -169,7 +170,7 @@ class FacialRecognition:
 
   def print_features(self):
     for _ in range(NUM_PRINTS):
-      print("%r   %f   %f   %f"%(self.fire, self.displacement_x, self.displacement_y, self.dist))
+      print(json.dumps({"fire":self.fire, "x":self.displacement_x, "y":self.displacement_y, "dist":float(self.dist)}))
     sys.stderr.write("%r   %f   %f   %f\n"%(self.fire, self.displacement_x, self.displacement_y, self.dist))
 
 if __name__ == "__main__":
