@@ -14,7 +14,7 @@ document.onmouseup=function(e){
     nose.shoot=false
 }
 
-var socket = io.connect("http://localhost:1759");
+var socket = io.connect("http://"+document.location.host);
 var visionSocket = io.connect("http://localhost:2701");
 var sessionKey=-1;
 

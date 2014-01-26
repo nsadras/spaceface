@@ -84,7 +84,7 @@ function drawBullet(pos, velocity, bulletID){
         var curr_bullet = bullets[bulletID]
         curr_bullet.position = pos.clone();
         curr_bullet.lookAt(pos.clone().add(velocity));
-        enabled[bulletID] = true; 
+        enabled[bulletID] = true;
     } else {
         var bullet = new THREEx.SpaceShips.Shoot();
         bullet.position = pos.clone();
