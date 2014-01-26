@@ -69,7 +69,12 @@ socket.on('heartbeat',function(data){
     curr = data[sessionKey]
     drawShip(new THREE.Vector3(curr.px,curr.py,curr.pz), new THREE.Vector3(curr.vx,curr.vy,curr.vz), curr.roll, curr.bullets, sessionKey);
     orientCamera(sessionKey);
-    purgeBullets(); //begone, foul demon
+    purgeBullets(); //begone, foul demons
+    
+    var health_bar = $('#hud');
+    console.log(curr.health);
+    health_bar.width(500.0*curr.health/curr.max_health);
+
     socket.emit('command',{sessionKey:sessionKey,controls:{dist:nose.dist,shoot:nose.shoot,displacement_x:nose.x,displacement_y:nose.y,triple:nose.triple}});
 });
 
