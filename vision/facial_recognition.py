@@ -84,6 +84,12 @@ class FacialRecognition:
           center_y = (h - (ny + nh) - ny)
         for nx, ny, nw, nh in noses:
           cv2.rectangle(roi_color, (nx, ny), (nx + nw, ny + nh), color=(0, 255, 0), thickness=2)
+
+	eyes = self.eye_cascade.detectMultiScale(roi_gray)
+        eyes = np.array(filter(lambda e: e[1] + e[3] < 2 * h / 3 and (e[0] + e[2] < w / 2 or e[0] > w / 2), eyes))
+	for nx, ny, nw, nh in eyes:
+          cv2.rectangle(roi_color, (nx, ny), (nx + nw, ny + nh), color=(0, 0, 255), thickness=2)
+
       cv2.imshow("calibration", frame)
 
       if cv2.waitKey(1) & 0xFF == ord("c"):
