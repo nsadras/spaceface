@@ -9,7 +9,6 @@ GameServerSocket.on("welcome", function (data) {
 
 GameServerSocket.on("heartbeat", function (data) {
 	GameServerSocket.emit("IamHere", {data:visionData});
-	graphicsUpdate(data)
 });
 
 setInterval(function(){
@@ -18,15 +17,8 @@ setInterval(function(){
 
 var visionData;
 
-VisionServerSocket.on("webCamData", function (data){
-	visionData = data["webCamData"];
+VisionServerSocket.on("webcamData", function (data){
+	visionData = data["data"];
 	console.log("In graphics Update visionData is " + visionData);
 });
-
-
-
-//data is in the form of a json - one boolean and two floats
-function graphicsUpdate(data) {
-	console.log("In graphics Update visionData is " + data.visionData);
-}
 </script>
