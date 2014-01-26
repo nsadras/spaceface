@@ -41,7 +41,10 @@ Vector.vfns={
     },
     proj:function(u,v){
         var vUnit = Vector.vfns.unitVector(v);
-        Vector.vfns.scale(vUnit,Vector.dot(vUnit,u))
+        Vector.vfns.scale(vUnit,Vector.dot(vUnit,u));
+    },
+    distance:function(u,v){
+        return Math.sqrt((u.x - v.x) * (u.x - v.x) + (u.y - v.y) * (u.y - v.y) + (u.z - v.z) * (u.z - v.z));
     },
 }
 

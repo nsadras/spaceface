@@ -5,7 +5,7 @@ function GameState(){
     //pointless comment
     
     this.addPlayer = function(sessionKey){
-        this.players[sessionKey] = new Player(); //TODO: Update to match player constructor
+        this.players[sessionKey] = new Player(sessionKey, this); //TODO: Update to match player constructor
     }
 
     this.removePlayer = function(sessionKey){

@@ -1,66 +1,53 @@
 var onRenderFcts= [];
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 2000 );
 camera.rotation.y=Math.PI;
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
+renderer.shadowMapEnabled  = true
 
-var spaceship;
-
-THREEx.SpaceShips.loadSpaceFighter03(function(object3d){
-    spaceship   = object3d
-    scene.add(spaceship)
-    //drawSelf(new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,1), 0);
-});
-
-//var skyBox = new THREE.CubeGeometry(10000,10000,10000);
-//var skyMaterial = new THREE.MeshBasicMaterial({color:0x9999ff})
-//    var sky = new THREE.Mesh(skyBox,skyMaterial);
-//    scene.add(sky);
-
-    var floorMaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00 } );
-    var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
-    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.position.y = -0.5;
-    floor.rotation.x = Math.PI / 2;
-    scene.add(floor);
-
-    camera.position.z = 2;
-    camera.position.y = 1;
-    //var mouse  = {x : 0, y : 0}
-    /**document.addEventListener('mousemove', function(event){
-        mouse.x        = (event.clientX / window.innerWidth ) - 0.5
-        mouse.y        = (event.clientY / window.innerHeight) - 0.5
-    }, false)
-**/
-// testing loopy stuff
-//onRenderFcts.push(function(delta, now){
-
-    //spaceship.position.y += .03;
-    //camera.lookAt(spaceship.position);    
-    //spaceship.rotation.y += .02;
-    //spaceship.rotation.x += -(mouse.y*5 - camera.position.y) * (delta*3)
-    //spaceship.rotation.y += (mouse.y*5 - camera.position.y) * (delta*3)
-    //camera.lookAt( scene.position )
-//});
-
-
-//onRenderFcts.push(function(delta, now){
-    //var mydirection = new THREE.Vector3(Math.cos(spaceship.rotation.x), Math.cos(spaceship.rotation.y), Math.cos(spaceship.rotation.z));
-    //camera.position = spaceship.position.sub(mydirection.multiplyScalar(10));
-    //camera.rotation = spaceship.rotation;
-    //camera.lookAt(spaceship.position);
-//});
 
 onRenderFcts.push(function(){
     renderer.render( scene, camera );                
 });
 
 
+function drawPlanets(){
+    //Planetz
+    var starfield = THREEx.Planets.createStarfield();
+    scene.add(starfield);
+
+    var sun = THREEx.Planets.createSun();
+    sun.position.y -= 100;
+    scene.add(sun);
+
+    var mercury = THREEx.Planets.createMercury();
+    mercury.position.y -= 200;
+    scene.add(mercury);
+
+    var neptune = THREEx.Planets.createNeptune();
+    neptune.position.z += 130;
+    scene.add(neptune);
+
+
+
+    var jupiter = THREEx.Planets.createJupiter();
+    jupiter.position.x += 300;
+    scene.add(jupiter);
+
+    //var rings = THREEx.Planets.createSaturnRing()
+    //rings.position.x += 100;
+    //scene.add(rings);
+
+}
+
+drawPlanets();
+
 var spaceships = {}
-function drawShip(pos, velocity, roll, sessionKey){ // don't do this at home kids
+function drawShip(pos, velocity, roll, bullet_list, sessionKey){ // don't do this at home kids
+    
     if(sessionKey in spaceships){
         if (spaceships[sessionKey]){
             var curr_ship = spaceships[sessionKey];
@@ -80,7 +67,47 @@ function drawShip(pos, velocity, roll, sessionKey){ // don't do this at home kid
             scene.add(spaceship);
         });
     }
+     
+    for(var i = 0; i < bullet_list.length; i++){
+        var curr_bullet = bullet_list[i];
+        var bullet_pos = new THREE.Vector3(curr_bullet.px, curr_bullet.py, curr_bullet.pz);
+        var bullet_velocity = new THREE.Vector3(curr_bullet.vx, curr_bullet.vy, curr_bullet.vz); 
+        drawBullet(bullet_pos, bullet_velocity, curr_bullet.id);
+    }
+
 }
+
+var bullets = {};
+var enabled = {};
+function drawBullet(pos, velocity, bulletID){
+    if(bulletID in bullets){
+        var curr_bullet = bullets[bulletID]
+        curr_bullet.position = pos.clone();
+        curr_bullet.lookAt(pos.clone().add(velocity));
+        enabled[bulletID] = true; 
+    } else {
+        var bullet = new THREEx.SpaceShips.Shoot();
+        bullet.position = pos.clone();
+        bullet.lookAt(pos.clone().add(velocity));
+        bullets[bulletID] = bullet;
+        enabled[bulletID] = true;
+        scene.add(bullet);
+    }
+}
+
+function purgeBullets(){
+    for(var bulletID in bullets){
+        if(enabled[bulletID]){
+            enabled[bulletID] = false;
+        } else {
+            scene.remove(bullets[bulletID]);
+            delete bullets[bulletID];
+            delete enabled[bulletID];
+        }
+    }
+}
+
+
 
 function orientCamera(sessionKey){
     var relativeCameraOffset = new THREE.Vector3(0,0,-15);
@@ -101,13 +128,6 @@ function destroy(sessionKey){ //ka-boom
     }
 }
 
-
-function drawBullet(pos, velocity){
-    var bullet = new THREEx.SpaceShips.Shoot()
-        bullet.position = pos.clone()
-        bullet.lookAt(pos.clone().add(velocity));
-    scene.add(bullet) 
-}
 
 
 function drawSelf(pos, velocity, roll){
