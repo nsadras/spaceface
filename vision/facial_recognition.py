@@ -73,7 +73,7 @@ class FacialRecognition:
 
       for x, y, w, h in faces:
         init_dist = w
-        frame = cv2.rectangle(frame, (x, y), (x + w, y + h), color=(255, 0, 0), thickness=2)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), color=(255, 0, 0), thickness=2)
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = frame[y:y+h, x:x+w]
         noses = self.nose_cascade.detectMultiScale(roi_gray)
@@ -106,7 +106,7 @@ class FacialRecognition:
         return (edge_x, edge_y)
 
       for x, y, w, h in faces:
-        frame = cv2.rectangle(frame, (x, y), (x + w, y + h), color=(255, 0, 0), thickness=2)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), color=(255, 0, 0), thickness=2)
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = frame[y:y+h, x:x+w]
         noses = self.nose_cascade.detectMultiScale(roi_gray)
