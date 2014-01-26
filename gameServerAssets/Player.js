@@ -34,7 +34,7 @@ function Player(sessionKey, gameState) {
 
     //Member functions
     this.update = function() {
-        var rotationAngle = constants.maxPlayerRotation*this.controls.displacement_x;
+        var rotationAngle = constants.maxPlayerRotation*Math.sin(this.controls.displacement_x);
         this.horiz_velocity = new Vector(
                 this.horiz_velocity.x*Math.cos(rotationAngle)-this.horiz_velocity.z*Math.sin(rotationAngle),
                 0,
@@ -43,7 +43,6 @@ function Player(sessionKey, gameState) {
         this.vert_velocity = new Vector(0,constants.maxPlayerVertVelocity*this.controls.displacement_y,0)
         this.velocity = Vector.vfns.scale(Vector.vfns.add(this.horiz_velocity,this.vert_velocity),3*speed_boost(-this.controls.dist));
         this.position = Vector.vfns.add(this.position, this.velocity);
-        console.log(speed_boost(-this.controls.dist));
         //Bullet logic
         if (this.controls.shoot && this.reload==0){
             this.bullets.push(new Bullet(this.position,this.velocity,this.sessionKey));
@@ -93,7 +92,6 @@ function Player(sessionKey, gameState) {
                 }
             }
         }
-        console.log(this.health);
     }
 
     this.digest = function() {

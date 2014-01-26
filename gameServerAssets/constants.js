@@ -3,7 +3,7 @@ var constants = {
     assetsdir:'assets',
     gameRefresh:25,
     maxPlayerVelocity:0.2,
-    maxPlayerRotation:Math.PI/32,
+    maxPlayerRotation:Math.PI/48,
     maxPlayerVertVelocity:0.2,
     bulletSpeed:1.0,
     reload:5,
