@@ -37,11 +37,7 @@ function drawPlanets(){
     jupiter.position.x += 300;
     scene.add(jupiter);
 
-    //var rings = THREEx.Planets.createSaturnRing()
-    //rings.position.x += 100;
-    //scene.add(rings);
-
-}
+    }
 
 drawPlanets();
 
@@ -134,30 +130,6 @@ function drawSelf(pos, velocity, roll){
     spaceship.position = pos.clone();//new THREE.Vector3(position.x, position.y, position.z);;
     spaceship.lookAt(pos.clone().add(velocity)); 
     spaceship.rotateZ(roll);
-    //console.log(roll);
-
-
-    /**
-    var relativeCameraOffset = new THREE.Vector3(0,0,-15);
-
-    var cameraOffset = relativeCameraOffset.applyMatrix4( spaceship.matrixWorld );
-
-    camera.position.x = cameraOffset.x;
-    camera.position.y = cameraOffset.y;
-    camera.position.z = cameraOffset.z;
-    camera.lookAt( spaceship.position );
-    camera.translateY(.5);
-    **/
-
-
-    //var unit_velocity = velocity.clone().divideScalar(velocity.length());
-    //console.log(unit_velocity);
-    //camera.position = spaceship.position.clone().sub(unit_velocity.multiplyScalar(2));
-    //camera.lookAt(spaceship.position);
-
-    //camera.translateY(1);
-
-}
 
 
 
@@ -175,18 +147,4 @@ requestAnimationFrame(function animate(nowMsec){
         onRenderFct(deltaMsec/1000, nowMsec/1000)
     })
 })
-
-/**
-  function render() {
-  requestAnimationFrame(render);
-  renderer.render(scene, camera);
-//camera.rotation = spaceship.rotation;
-//spaceship.position.z -= .01;
-//camera.position.z -= .008
-//spaceship.rotation.x += 0.1;
-//spaceship.rotation.y += 0.02;
-}
-render();
-
- **/
 
