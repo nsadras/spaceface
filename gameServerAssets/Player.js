@@ -1,38 +1,50 @@
-var Vector = require('./gameServerAssets/Vector.js');
+var Vector = require('./Vectors.js').Vector;
+var Bullet = require('./Bullet.js');
+var constants = require('./constants.js').constants;
 function Player() {
-    this.position = new Vector.Vector(0, 0, 0);
-    this.velocity = new Vector.Vector(0, 0, 1);
-    this.acceleration = new Vector.Vector(0, 0, 0);
-    this.shoot = // i don't know
-    this.displacement_x = // i don't know
-    this.displacement_y = // i don't know
+
+    //Init params
+    this.position = new Vector(0, 0, 0);
+    this.velocity = new Vector(0, 0, 0);
+    this.bullets=[];
+    this.reload=0;
+
+    //Badly named private variables
+    this.horiz_velocity = new Vector(0,0, constants.maxPlayerVelocity); //INVARIANT: this.horiz_velocity.y==0
+    this.vert_velocity = new Vector(0,0,0); //INVARIANT: this.horiz_velocity.x,z==0
+
+    this.controls={shoot:false,displacement_x:0.0,displacement_y:0.0};
+
+    //Member functions
     this.update = function() {
-        // acceleration update
-        var v_angles = this.velocity.getAngle();
-        var v_theta = v_angles.xz;
-        if (Math.abs(v_theta) < 0.0001) {
-            var normal = new Vector.Vector(0, 1, 0);
-        } else {
-            var n_theta = v_theta + Math.PI / 2;
-            var v_phi = v_angles.xy;
-            if (v_theta > 0) {
-                var n_phi = v_phi + Math.PI;
-            } else {
-                var n_phi = v_phi;
-            }
-            y = Math.sin(n_theta);
-            x = y * Math.cos(n_phi) / Math.tan(n_theta);
-            z = y * Math.sin(n_phi) / Math.tan(n_theta);
-            var normal = new Vector.Vector(x, y, z);
+        var rotationAngle = constants.maxPlayerRotation*this.controls.displacement_x;
+        this.horiz_velocity = new Vector(
+                this.horiz_velocity.x*Math.cos(rotationAngle)-this.horiz_velocity.z*Math.sin(rotationAngle),
+                0,
+                this.horiz_velocity.x*Math.sin(rotationAngle)+this.horiz_velocity.z*Math.cos(rotationAngle)
+                )
+        this.vert_velocity = new Vector(0,constants.maxPlayerVertVelocity*this.controls.displacement_y,0)
+        this.velocity = Vector.vfns.add(this.horiz_velocity,this.vert_velocity);
+        this.position = Vector.vfns.add(this.position, this.velocity);
+
+        //Bullet logic
+        if (this.controls.shoot && this.reload==0){
+            this.bullets.push(new Bullet(this.position,this.velocity));
+            this.reload+=1;
         }
-        var basis2 = Vector.cross(normal, this.velocity);
-        basis2 = Vector.unitVector(basis2);
-        this.acceleration = Vector.add(Vector.scale(normal, this.displacement_x), Vector.scale(basis2, this.displacement_y));
-        this.velocity = Vector.add(this.velocity, this.acceleration);
-        this.position = Vector.add(this.position, this.velocity);
+        if (this.reload!=0){
+            this.reload=(this.reload+1)%constants.reload;
+        }
+        for (var i = 0; i < this.bullets.length; i++){
+            this.bullets[i].update();
+        }
     }
+
     this.digest = function() {
-        var angles = this.velocity.getAngle();
+        bulletDigest = [];
+        for (var i = 0; i < this.bullets.length; i++){
+            bulletDigest.push(bullets[i].digest());
+        }
         return {
             px:this.position.x,
             py:this.position.y,
@@ -40,8 +52,10 @@ function Player() {
             vx:this.velocity.x,
             vy:this.velocity.y,
             vz:this.velocity.z,
-            roll:0,
+            roll:this.controls.displacement_x*Math.PI/2,
+            bullets:bulletDigest,
         };
     }
 }
+
 exports.Player=Player;

@@ -27,11 +27,28 @@ class FacialRecognition:
       center_x, center_y, init_dist = self.calibrate_center()
       min_x = self.calibrate_edge(motion_str="leftward")[0]
       self.calibrate_center()
+      while min_x >= center_x:
+        sys.stderr.write("Calibration stage failed, attempting again.\n")
+        min_x = self.calibrate_edge(motion_str="leftward")[0]
+        self.calibrate_center()
       max_x = self.calibrate_edge(motion_str="rightward")[0]
       self.calibrate_center()
+      while max_x <= center_x:
+        sys.stderr.write("Calibration stage failed, attempting again.\n")
+        max_x = self.calibrate_edge(motion_str="rightward")[0]
+        self.calibrate_center()
       min_y = self.calibrate_edge(motion_str="downward")[1]
       self.calibrate_center()
+      while min_y >= center_y:
+        sys.stderr.write("Calibration stage failed, attempting again.\n")
+        min_y = self.calibrate_edge(motion_str="downward")[1]
+        self.calibrate_center()
       max_y = self.calibrate_edge(motion_str="upward")[1]
+      self.calibrate_center()
+      while max_y <= center_y:
+        sys.stderr.write("Calibration stage failed, attempting again.\n")
+        max_y = self.calibrate_edge(motion_str="upward")[1]
+        self.calibrate_center()
     except FacialRecognitionException as e:
       self.cap.release()
       cv2.destroyAllWindows()
@@ -73,7 +90,7 @@ class FacialRecognition:
         return center_x, center_y, init_dist
 
   def calibrate_edge(self, motion_str):
-    sys.stderr.write("Move head slowly %s.\n"%motion_str)
+    sys.stderr.write("Turn head slowly %s.\n"%motion_str)
     edge_x, edge_y = 0, 0
     while (self.cap.isOpened()):
       ret, frame = self.cap.read()
