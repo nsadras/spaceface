@@ -59,7 +59,7 @@ function drawShip(pos, velocity, roll, sessionKey){ // don't do this at home kid
         console.log("Drawing "+sessionKey+" for the first time.");
         spaceships[sessionKey] = false;
         THREEx.SpaceShips.loadSpaceFighter03(function(object3d){
-            spaceship   = object3d;
+            spaceship = object3d;
             spaceship.position = pos.clone();
             spaceship.lookAt(pos.clone().add(velocity));
             spaceship.rotateZ(roll);

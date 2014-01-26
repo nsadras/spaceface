@@ -7,6 +7,12 @@ document.onmousemove=function(e){
     nose.x=(e.clientX/window.innerWidth)*2-1;
     nose.y=(1.0-e.clientY/window.innerHeight)*2-1;
 }
+document.onmousedown=function(e){
+    nose.shoot=true
+}
+document.onmouseup=function(e){
+    nose.shoot=false
+}
 
 var socket = io.connect("http://localhost:1759");
 var visionSocket = io.connect("http://localhost:2701");
@@ -21,6 +27,7 @@ visionSocket.on('welcome',function(data){
     visionSocket.on('webcamData', function(data){
         console.log("weoirjwej: ", data.data);
         var parsed = window.JSON.parse(data.data);
+        nose.shoot = parsed["fire"];
         nose_x_cache.push(parsed["x"]);
         nose_y_cache.push(parsed["y"]);
 	      if (nose_x_cache.length>LPF_ORDER){
