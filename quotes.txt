@@ -1,0 +1,3 @@
+"Can I have some documentation?" --Tim
+"Spaceships take up a lot of space." --Nitin
+"'Of, not o'. Emacs, not vim." --Rohan

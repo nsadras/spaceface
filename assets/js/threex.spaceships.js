@@ -143,8 +143,8 @@ THREEx.SpaceShips.Shoot	= function(){
 		// init canvas
 		var canvas	= document.createElement( 'canvas' );
 		var context	= canvas.getContext( '2d' );
-		canvas.width	= 16;
-		canvas.height	= 64;
+		canvas.width	= 8;
+		canvas.height	= 8;
 		// set gradient
 		var gradient	= context.createRadialGradient(
 			canvas.width/2, canvas.height /2, 0,

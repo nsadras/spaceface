@@ -1,20 +1,23 @@
-Player = function(){
-    this.update=function(){console.log("player update called");};
-    this.digest=function(){console.log("player digest called");};
-} 
-//TODO: Replace dummy with import
-
+Player = require('./Player.js').Player;
 function GameState(){
-    this.players={} //Array of players
+    this.players={} //Hash of players
+
     //pointless comment
+    
     this.addPlayer = function(sessionKey){
-        players[sessionKey] = new Player(); //TODO: Update to match player constructor
+        this.players[sessionKey] = new Player(sessionKey, this); //TODO: Update to match player constructor
     }
+
+    this.removePlayer = function(sessionKey){
+        delete this.players[sessionKey];
+    }
+
     this.update=function(){
         for (sessionKey in this.players){
             this.players[sessionKey].update();
         }
     }
+
     this.digest=function(){
         var out = {};
         for (sessionKey in this.players){
@@ -22,8 +25,12 @@ function GameState(){
         }
         return out;
     }
+
     this.setControls=function(sessionKey,controls){
-        this.players[sessionKey].controls=controls;
+        if (sessionKey in this.players){
+            this.players[sessionKey].controls=controls;
+        }
     }
+
 }
 exports.GameState = GameState;
