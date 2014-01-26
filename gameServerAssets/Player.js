@@ -19,7 +19,7 @@ function Player(sessionKey, gameState) {
     this.horiz_velocity = new Vector(0,0, constants.maxPlayerVelocity); //INVARIANT: this.horiz_velocity.y==0
     this.vert_velocity = new Vector(0,0,0); //INVARIANT: this.horiz_velocity.x,z==0
 
-    this.controls={dist: 0.0, shoot:false,displacement_x:0.0,displacement_y:0.0};
+    this.controls={dist:0.0,shoot:false,displacement_x:0.0,displacement_y:0.0,triple:true};
 
     function speed_boost(proximity){
         var boost = .001;
@@ -47,17 +47,37 @@ function Player(sessionKey, gameState) {
         //Bullet logic
         if (this.controls.shoot && this.reload==0){
             this.bullets.push(new Bullet(this.position,this.velocity,this.sessionKey));
-            if (this.bullets.length>constants.maxBullets){
+
+            if (this.controls.triple) {
+                var u1 = Vector.vfns.scale(Vector.vfns.unitVector(new Vector(-this.velocity.z, 0, this.velocity.x)), .75);
+                var u2 = Vector.vfns.scale(Vector.vfns.unitVector(new Vector(this.velocity.z, 0, -this.velocity.x)), .75);
+
+                var deflection = .5*Math.sin(this.controls.displacement_x*Math.PI/2);
+
+                var disp1 = Vector.vfns.add(this.position, Vector.vfns.add(u1,new Vector(0,-deflection,0)));
+                var disp2 = Vector.vfns.add(this.position, Vector.vfns.add(u2,new Vector(0,deflection,0)));
+
+                this.bullets.push(new Bullet(disp1, this.velocity, this.sessionKey));
+                this.bullets.push(new Bullet(disp2, this.velocity, this.sessionKey));
+            }
+            while (this.bullets.length>constants.maxBullets){
                 this.bullets=this.bullets.slice(1);
             }
             this.reload+=1;
         }
         if (this.reload!=0){
-            this.reload=(this.reload+1)%constants.reload;
+            if (this.controls.triple) {
+                this.reload=(this.reload+1)%constants.reloadTriple;
+            } else {
+                this.reload=(this.reload+1)%constants.reload;
+            }
         }
         for (var i = 0; i < this.bullets.length; i++){
             this.bullets[i].update();
             for (sessionKey in gameState.players) {
+                if(sessionKey == this.sessionKey){
+                    continue;
+                }
                 if (Vector.vfns.distance(this.bullets[i].position, gameState.players[sessionKey].position) < constants.hitRadius) {
                     this.hits++;
                     gameState.players[sessionKey].health--;

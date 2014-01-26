@@ -6,9 +6,10 @@ var constants = {
     maxPlayerRotation:Math.PI/32,
     maxPlayerVertVelocity:0.2,
     bulletSpeed:1.0,
-    reload:10,
+    reload:5,
+    reloadTriple:10,
     maxBullets:20,
-    maxHealth:3,
+    maxHealth:10,
     hitRadius:0.5,
 }
 exports.constants = constants;

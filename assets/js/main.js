@@ -1,7 +1,7 @@
 var LPF_ORDER=20;
 nose_x_cache=[];
 nose_y_cache=[];
-nose={x:0,y:0,shoot:false,dist:0.0}
+nose={x:0,y:0,shoot:false,dist:0.0,triple:true}
 
 document.onmousemove=function(e){
     nose.x=(e.clientX/window.innerWidth)*2-1;
@@ -12,6 +12,11 @@ document.onmousedown=function(e){
 }
 document.onmouseup=function(e){
     nose.shoot=false
+}
+document.onkeypress=function(e){
+    if (e.keyCode == 119) { // press W to toggle weapon
+        nose.triple = !nose.triple;
+    }
 }
 
 var socket = io.connect("http://"+document.location.host);
@@ -65,7 +70,7 @@ socket.on('heartbeat',function(data){
     drawShip(new THREE.Vector3(curr.px,curr.py,curr.pz), new THREE.Vector3(curr.vx,curr.vy,curr.vz), curr.roll, curr.bullets, sessionKey);
     orientCamera(sessionKey);
     purgeBullets(); //begone, foul demon
-    socket.emit('command',{sessionKey:sessionKey,controls:{dist: nose.dist,shoot:nose.shoot,displacement_x:nose.x,displacement_y:nose.y}});
+    socket.emit('command',{sessionKey:sessionKey,controls:{dist:nose.dist,shoot:nose.shoot,displacement_x:nose.x,displacement_y:nose.y,triple:nose.triple}});
 });
 
 socket.on('playerExit',function(data){
