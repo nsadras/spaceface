@@ -108,6 +108,9 @@ function Player(sessionKey, gameState) {
             vz:this.velocity.z,
             roll:this.controls.displacement_x*Math.PI/2,
             bullets:bulletDigest,
+            health: this.health,
+            max_health:constants.maxHealth,
+            kills: this.kills
         };
     }
 }

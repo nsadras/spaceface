@@ -11,6 +11,53 @@
         <script src="js/threex.planets.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+        <style>
+        body {
+          cursor: none;
+          font-family: Georgia, Helvetica, sans-serif;
+          font-weight: bold;
+          margin: 0;
+          overflow: hidden;
+          padding: 0;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+        #hud {
+          bottom: 10px;
+          position: absolute;
+          right: 10px;
+          z-index: 100;
+          background-color: #800000;
+          display: inline-block;
+          margin: 0;
+          padding: 5px;
+          width: 500px;
+        }
+        #radar {
+          background-color: #EEEEEE;
+          border: 1px solid black;
+          bottom: 10px;
+          left: 10px;
+          position: absolute;
+          z-index: 100;
+        }
+        #hurt {
+          background-color: red;
+          display: none;
+          left: 0;
+          opacity: 0.15;
+          pointer-events: none;
+          position: absolute;
+          top: 0;
+          z-index: 1002;
+        }
+        </style>  
+    
+    
     </head>
     <body>
                 <script src="js/game.js" type="text/javascript"></script>
